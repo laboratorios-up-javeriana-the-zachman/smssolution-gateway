@@ -1,0 +1,156 @@
+version: '3.8'
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack-service
+    environment:
+      - SERVICES=sqs,sns,apigateway
+      - AWS_DEFAULT_REGION=eu-central-1
+      - EDGE_PORT=4566
+    ports:
+      - '4566-4597:4566-4597'
+    volumes:
+      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  smssolutions-gateway:
+    build: './smssolution-gateway'
+    image: smssolutions-gateway
+    container_name: smssolutions-gateway
+    hostname: smssolutions-gateway
+    ports: 
+      - 8181:3000
+  smssolutions-user:
+    build: './smssolutions-user'
+    image: smssolutions-user
+    container_name: smssolutions-user
+    ports: 
+      - 8182:3000
+  smssolutions-parameter:
+    build: './smssolutions-parameter'
+    image: smssolutions-parameter
+    container_name: smssolutions-parameter
+    ports: 
+      - 8183:3000
+  smssolutions-message:
+    build: './smssolutions-message'
+    image: smssolutions-message
+    container_name: smssolutions-message
+    ports: 
+      - 8184:3000
+  smssolutions-campaign:
+    build: './smssolutions-campaign'
+    image: smssolutions-campaign
+    container_name: smssolutions-campaign
+    ports: 
+      - 8185:3000    
+  smssolutions-event:
+    build: './smssolution-event'
+    image: smssolutions-event
+    container_name: smssolutions-event
+    ports: 
+      - 8186:3000    
+  smssolutions-log:
+    build: './smssolutions-reports'
+    image: smssolutions-log
+    container_name: smssolutions-log
+    ports: 
+      - 8187:3000    
+  smssolutions-front:
+    build: './dashboard-angular'
+    image: smssolutions-front
+    container_name: smssolutions-front
+    ports: 
+      - 8080:80
+  # mysql-user:
+  #   image: mysql:8.0
+  #   container_name: mysql-user
+  #   cap_add:
+  #     - SYS_NICE
+  #   restart: always
+  #   environment:
+  #     - MYSQL_DATABASE=user
+  #     - MYSQL_ROOT_PASSWORD=1234567890
+  #   ports:
+  #     - '3306:3306'
+  #   command: --init-file /docker-entrypoint-initdb.d/init-user.sql
+  #   volumes:
+  #     - db-user:/var/lib/mysql
+  #     - ./db/init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
+  # mysql-parameter:
+  #   image: mysql:8.0
+  #   container_name: mysql-parameter
+  #   cap_add:
+  #     - SYS_NICE
+  #   restart: always
+  #   environment:
+  #     - MYSQL_DATABASE=parameter
+  #     - MYSQL_ROOT_PASSWORD=1234567890
+  #   ports:
+  #     - '3307:3306'
+  #   command: --init-file /docker-entrypoint-initdb.d/init-parameter.sql
+  #   volumes:
+  #     - db-parameter:/var/lib/mysql
+  #     - ./db/init-parameter.sql:/docker-entrypoint-initdb.d/init-parameter.sql      
+  # mysql-message:
+  #   image: mysql:8.0
+  #   container_name: mysql-message
+  #   cap_add:
+  #     - SYS_NICE
+  #   restart: always
+  #   environment:
+  #     - MYSQL_DATABASE=message
+  #     - MYSQL_ROOT_PASSWORD=1234567890
+  #   ports:
+  #     - '3308:3306'
+  #   command: --init-file /docker-entrypoint-initdb.d/init-message.sql
+  #   volumes:
+  #     - db-message:/var/lib/mysql
+  #     - ./db/init-message.sql:/docker-entrypoint-initdb.d/init-message.sql      
+  # mysql-campaign:
+  #   image: mysql:8.0
+  #   container_name: mysql-campaign
+  #   cap_add:
+  #     - SYS_NICE
+  #   restart: always
+  #   environment:
+  #     - MYSQL_DATABASE=campaign
+  #     - MYSQL_ROOT_PASSWORD=1234567890
+  #   ports:
+  #     - '3309:3306'
+  #   command: --init-file /docker-entrypoint-initdb.d/init-campaign.sql
+  #   volumes:
+  #     - db-campaign:/var/lib/mysql
+  #     - ./db/init-campaign.sql:/docker-entrypoint-initdb.d/init-campaign.sql      
+  # mysql-event:
+  #   image: mysql:8.0
+  #   container_name: mysql-event
+  #   cap_add:
+  #     - SYS_NICE
+  #   restart: always
+  #   environment:
+  #     - MYSQL_DATABASE=event
+  #     - MYSQL_ROOT_PASSWORD=1234567890
+  #   ports:
+  #     - '3310:3306'
+  #   command: --init-file /docker-entrypoint-initdb.d/init-event.sql
+  #   volumes:
+  #     - db-event:/var/lib/mysql
+  #     - ./db/init-event.sql:/docker-entrypoint-initdb.d/init-event.sql
+        
+networks:
+  default-nw:
+    external: true
+# volumes:
+#   db:
+#     driver: local
+#   db-user:
+#     driver: local
+#   db-parameter:
+#     driver: local
+#   db-message:
+#     driver: local
+#   db-event:
+#     driver: local
+#   db-campaign:
+#     driver: local
