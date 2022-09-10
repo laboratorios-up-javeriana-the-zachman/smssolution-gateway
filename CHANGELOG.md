@@ -1,4 +1,4 @@
-## [Unreleased] - 2022-09-09
+## [Unreleased]
 ### Added
 - Add Dockerfile project build pipeline
 - Add metod Extract log
