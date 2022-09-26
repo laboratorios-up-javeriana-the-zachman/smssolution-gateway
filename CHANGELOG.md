@@ -2,6 +2,7 @@
 ### Added
 - Add Dockerfile project build pipeline
 - Add metod Extract log
+- Add include campaing upload file method.
 
 ## [1.0.4] - 2022-09-02
 ### Added
